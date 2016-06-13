@@ -1,0 +1,145 @@
+= 테스트 계획할 때에 필요한 질문들 (The Inquiry Method for Test Planning)
+:author: Anthony Vallone (http://www.anthonysapps.com/anthony)
+2016-06-06
+:translator: 여용구 <joseph.yeo@navercorp.com>
+:icons: font
+
+++++
+<link rel="stylesheet"  href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.1.0/css/font-awesome.min.css">
+++++
+
+:toc:
+
+[NOTE]
+====
+2016.6.6에 Google testing blog에 올라온 http://googletesting.blogspot.kr/2016/06/the-inquiry-method-for-test-planning.html?utm_source=feedburner&utm_medium=email&utm_campaign=Feed:+blogspot/RLXA+[The Inquiry Method for Test Planning (by  Anthony Vallone)]의 포스팅을 번역하였다.
+
+* 테스트 플래닝을 하면서 이런 질문을 던져본 적이 언제였던가 반성하면서, 바로 즉답은 찾지 못해도 질문은 던져 볼 수 있지 않겠는가를 생각하며 번역해본다.
+* 참고로, 질문에 대해서는 영어 병기를 하였으며 가급적 영어 질문으로 되새겨 보기를... 테스트 플랜 때 마다 스스로 이 질문을 던져보기를 바래본다.
+====
+
+
+테스트 플랜을 만드는 것은 복잡한 작업이다. 이상적인 테스트 플랜은 https://en.wikipedia.org/wiki/Cost%E2%80%93benefit_analysis[비용 편익 분석(cost-benefit analysis)]과 https://en.wikipedia.org/wiki/Risk_analysis[위험 분석(risk analysis)]의 원칙을 적용하여 만들어지며, 소프트웨어 개발의 다음과 같은 요소들이 극적인 균형을 이룬다.
+
+* *구현 비용(Implementation cost)*: 특정 시나리오에 대해 테스트 가능한(testable) 기능을 만들고, 자동화 테스트를 구현하는 시간과 복잡도는 매우 다양하다. 이런 부분은 단기간에 걸쳐 개발 비용에 영향을 준다.
+* *유지보수 비용(Maintenance cost)*: 테스트 또는 테스트 플랜은 유지보수가 쉬운 것 부터 어려운 것까지 매우 다양하다. 이는 장기적으로 개발 비용에 영향을 준다. 수동 테스트의 경우 장기간에 걸쳐 비용을 든다.
+* *통화 비용(Monetary cost)*: 어떤 테스트 접근 방식은 실제로 돈이 들어간다.
+* *이득(Benefit)*: 정도는 다양하지만, 테스트를 통해 이슈를 예방하고 생산성을 지원할 수 있다. 개발 주기 상에서 빨리 문제를 잡을 수록, 더 많은 이득을 얻는다.
+
+이런 요소들이 효과적으로 균형잡힌 플랜을 만드는 것은 프로젝트 중요도, 구현의 상세 정도, 가용한 리소스 및 팀 의견에 크게 좌우된다. 많은 프로젝트에서 비용이 적게 들고 큰 이득을 주는 단위테스트로 괄목할 만한 커버리지를 달성할 수 있음에도 불구하고, 더 큰 테스트(larger test)와 복잡한 조건을 갖는 케이스에 더 무게를 두기도 한다. 미션 크리티컬 프로젝트는 가능한 리스크를 반드시 최소화해야한다. 그래서 그럴 경우에는 모든 단계에 었어 엄격한 테스트를 개발하고 더 높은 비용도 감당케 된다.
+
+이 가이드는 프로젝트에 이런 요소들을 어떻게 균형을 주어야하는 지에 대해서는 독자의 몫으로 놔둔다. 또한 테스트 템플릿도 제공하지 않는다. 왜냐하면 템플릿은 너무 일반적이거나 너무 자세하고 또한 빨리 구식이 되어버리기 때문이다. 대신에 테스테 플랜을 작성함에 있어 어떻게 최적의 내용을 선택할 것인지에 대해 초점을 둔다.
+
+== 테스트 플랜 vs. 전략 (Test plan vs. strategy)
+계속 나아가기에 앞서, 먼저 테스트 플랜을 정의하는 2 가지 일반적인 방법을 분류해보자.
+
+* *단일 테스트 플랜(Single test plan)*: 어떤 프로젝트는 프로젝트애서 계획되고 구현되는 모든 테스팅을 기술하는  단일 "테스트 플랜(test plan)"을 갖는다.
+* *단일 테스트 전략과 다중 플랜(Single test strategy and many plans)*: 어떤 프로젝트는 하나의 "테스트 전략(test strategy)" 문서와 함께 다수의 작은 "테스트 플랜(test plan)"문서를 갖는다. 대게 전략(strategy)은 테스트 접근 방법과 목표를 전반적으로 담는 반면에, 플랜(plan)은 특정 기능 또는 업데이트 사항을 담는다.
+
+두 가지 모두 프로젝트 설계 문서로 통합될 수 있다. 둘 다 잘 작동하기 때문에 프로젝트에 맞게 선택하면 된다. 일반적으로 말하면, 안정적인 프로젝트에서는 단일 플랜이 좋고, 반면에 빠르게 변하는 프로젝트에서는 자주 변경되지 않는 전략과 빈번히 추가되는 플랜이 최적의 조합이다.
+
+이 가이드의 목적 상, 두 개의 테스트 문서 모두를 "테스트 플랜(test plan)"으로 간단히 부르겠다. 만약 여러 문서를 다룬다면, 아래 제시되는 조언을 문서들에 대해 적용하기만 하면 된다.
+
+== 내용 선택 (Content selection)
+테스트 플랜의 내용을 작성하는 좋은 방법은 답이 필요한 질문을 모두 나열해보는 것이다. 아래의 리스트는 프로젝트에 따라 적용 될 수도 혹은 안 될 수도 있지만, 중요한 질문들을 광범위하게 모아 정리한 것이다. 리스트 전체를 찬찬히 살펴보면서 적용할 것들을 선택해보라. 이들 질문에 답을 해가면서 테스트 플랜에 들어가는 내용을 채우게 되고, 선택한 내용을 팀에서 선호하는 양식에 맞게 플랜 구조를 갖춰 만들면 된다.
+
+== 사전 조건 (Prerequisites)
+* *테스트 플랜이 필요한가?* 프로젝트 설계 문서나 명확한 프로덕트 비전이 없다면, 테스트 플랜을 작성하기에는 너무 이르다 할수 있다.
+* *프로젝트 설계에 테스트가능성(testability)이 고려되어있는가?* 프로젝트가 구현에 깊이 들어가기 전에, 모든 시나리오는 테스트 가능할 수 있도록 설계 되어야한다(가능하다면 자동화 될 수 있도록). 프로젝트 설계 문서와 테스트 플랜 모두에 테스트 가능성(testability)에 대한 커멘트를 담고 있어야한다.
+* *플랜을 지속적으로 업데이트할 것인가?* 혹 그렇다면, 지나치게 상세한 부분을 추가하는 것은 주의할 필요가 있다. 그렇지 않으면 플랜을 유지보수하기에 너무 힘들 수 있다.
+* *이와 같은 품질에 대한 노력이 다른 팀과 겹치지 않는가?* 혹 그렇다면, 어떻게 중복 작업을 피할 것인가?
+
+== 리스크 (Risk)
+* *중대한 프로젝트 리스크가 있는가? 그렇다면 어떻게 완화할 것인가? (Are there any significant project risks, and how will you mitigate them?)*
+** 사람이나 동물에 대한 상해 (Injury to people or animals)
+** 사용자 데이터의 보안과 무결성 (Security and integrity of user data)
+** 사용자 개인정보보호 (User privacy)
+** 회사 시스템에 대한 보안 (Security of company systems)
+** 하드웨어 또는 자신에 대한 피해 (Hardware or property damage)
+** 법규 준수 이슈 (Legal and compliance issues)
+** 대외비 및 중요 데이타에 대한 누출 (Exposure of confidential or sensitive data)
+** 데이터 손실 및 변조 (Data loss or corruption)
+** 수익 손실 (Revenue loss)
+** 회복불가한 시나리오(Unrecoverable scenarios)
+** SLA (SLAs)
+** 성능 요구사항 (Performance requirements)
+** 사용자에게 잘못된 정보 전달 (Misinforming users)
+** 타 프로젝트에 영향 (Impact to other projects)
+** 타 프로젝트로 부터의 영향 (Impact from other projects)
+** 회사 평판에 영향 (Impact to company’s public image)
+** 생산성 저하 (Loss of productivity)
+* *프로젝트의 기술적 취약점은 무엇인가? (What are the project’s technical vulnerabilities?)*
+** 해킹당하기 쉬운, 깨지기 쉬운 기능이나 컴포넌트 또는 대규모 리팩토링 필요한 부분
+** 자주 이슈를 발생 시킨 플랫폼 또는 의존성 요소들
+** 사용자가 시스템에 해를 끼칠 가능성
+** 과거 이슈들에서 보여지는 트렌드
+
+== 커버리지 (Coverage)
+* *테스트 외양은 무엇처럼 보이나? (What does the test surface look like?)* 하나의 메소드를 갖는 간단한 라이브러리인가? 또는 수많은 유스케이스를 갖는 멀티 플랫폼 클라이언트-서버 스테이트풀 시스템인가? 장애를 일으킬 수 있을 만한 부분을 찾도록 시스템 설계와 아키텍쳐를 기술해보라.
+* *기능은 무엇인가? (What are the features?)* 모든 기능에 대한 요약 리스트를 만들고, 기능 카테고리 별로 어떻게 테스트할지를 기술해보라.
+* *테스테 제외 영역은 무엇인가? (What will not be tested?)* 모든 가능성을 커버하는 테스트 스윗은 없다. 이 부분에 대한 내용을 앞 부분에 두고, 특정 케이스를 테스트 하지 않는 근거를 적어두는 것이 최적의 방법이다. 예) 낮은 우선순위를 갖는 낮은 리스크에 대한 영역, 가능성이 적은 복잡한 케이스들, 다른 팀에 의해 커버되는 영역, 테스팅할 수 있는 준비가 되어있지 않은 기능들 등..
+* *단위(소규모) 테스트, 통합(중규모) 테스트 및 시스템(대규모) 테스트가 무엇을 커버하는가? (What is covered by unit (small), integration (medium), and system (large) tests?)* 가능할 할 수 있는 대로 테스트는 더 작게 만들고, 남겨진 작은 영역에 대해서만 더 큰 테스트를 만들라. 어떤 크기의 테스트로 테스트 케이스의 특정 부분을 테스트하는 것이 가장 최적인지를 기술하고, 그 근거를 제시하라.
+* *수동테스트 vs 자동화테스트, 무엇을 수동 또는 자동화로 테스트할 것인가? (What will be tested manually vs. automated?)* 실현가능하고 비용대비 효과가 클 경우, 자동화는 항상 최고의 선택이다. 많은 프로젝트에서 모든 테스트를 자동화 할 수 있다. 하지만, 수동 테스트를 선택하는 것이 좋을 때가 있다. 수동으로 테스트할 테스트 케이스를 기술하고 근거를 제시하라.
+* *각각의 테스트 영역을 어떻게 커버할 것인가? (How are you covering each test category?)*  다음을 고려해보라
+** http://www.w3.org/wiki/Accessibility_testing[접근성(accessibility)]
+** http://en.wikipedia.org/wiki/Functional_testing[기능(functional)]
+** http://en.wikipedia.org/wiki/Fuzz_testing[퍼징(fuzz)]
+** 국제화 및 현지화(internationalization and localization)
+** http://en.wikipedia.org/wiki/Software_performance_testing[성능(performance)], http://en.wikipedia.org/wiki/Load_testing[로드(load)], http://en.wikipedia.org/wiki/Stress_testing[스트레스(stress)], 및 https://en.wikipedia.org/wiki/Soak_testing[지속성 또는 소크 (endurance (aka soak))]
+** 개인정보보호(privacy)
+** http://en.wikipedia.org/wiki/Security_testing[보안(security)]
+** http://en.wikipedia.org/wiki/Smoke_testing_(software)[스모크(smoke)]
+** http://en.wikipedia.org/wiki/Stability_testing[안정성(stability)]
+** http://en.wikipedia.org/wiki/Usability_testing[사용성(usability)]
+* *정적 및 동적 분석 툴을 사용할 것인가? (Will you use static and/or dynamic analysis tools?)* https://en.wikipedia.org/wiki/Static_program_analysis[정적 분석 툴] 및 https://en.wikipedia.org/wiki/Dynamic_program_analysis[동적 분석 툴]은 리뷰나 테스트로 찾기 어려운 문제를 발견할 수 있다. 이 툴에 대한 사용을 고려해보라.
+* *시스템 컴포넌트 및 의존성에 대한 스텁(stub), 목(mock), 페이크(fake), 스테이징(stage)을 어떻게 만들 것인가? 아니면 테스팅 기간동안에만 사용할 것인가?(How will system components and dependencies be stubbed, mocked, faked, staged, or used normally during testing?)* 이들 각각은 사용해야하는 좋은 이유가 있고, 커버리지에 영향을 주는 부분이 다르다.
+* *테스트 대상이 되는 빌드는 무엇인가? (What builds are your tests running against?)* 테스트 대상은 HEAD 빌드, 스테이지 빌드인가 아니면 릴리즈 대상 후보인가? 만약 HEAD에 대해서만 테스트한다면, 어떻게 릴리즈의 개별 변경리스트의 셋을 선별하여 릴리즈 빌드를 테스트할 것인가? 그리고 보통 HEAD 빌드에서 볼 수 없는 시스템 형상 변경은 어떻게 테스트할 것인가?
+* *팀 외부에서 수핼될 테스팅의 종류는 무엇인가? (What kind of testing will be done outside of your team?)* 예를 들면,
+** https://en.wikipedia.org/wiki/Eating_your_own_dog_food[도그푸딩(Dogfooding)]
+** 외부 클라우드소싱 테스팅
+** 공개 알파/베타 버전 (릴리즈 전에 어떻게 테스트할 것인가?)
+** 외부 신뢰할 만한 테스터들
+* *데이터 마이그레이션은 어떻게 테스트하는가? (How are data migrations tested?)* 마이그레이션 전후 결과에 대한 특별한 테스트가 필요할 수도 있다.
+* *하위 호환성에 대한 고려가 필요하지 않은가? (Do you need to be concerned with backward compatibility?)* 이미 다수의 사용자에게 배포되어 사용 중이거나, 타 시스템과 의존성이 있는 시스템의 프로토콜, 환경설정, 기능 및 동작이 있을 수 있다.
+* *서버/클라이언트/디바이스 소프트웨어에 대한 업그레이드 시나리오 테스트가 필요한가? 또는 소프트웨어에서 사용중인 의존성/플랫폼/API에 대한 업그레이트 테스트가 필요한가? (Do you need to test upgrade scenarios for server/client/device software or dependencies/platforms/APIs that the software utilizes?)*
+* *라인 커버러지 목표가 필요한가? (Do you have line coverage goals?)*
+
+== 툴사용 및 인프라스트럭쳐 (Tooling and Infrastructure)
+* *새로운 테스트 프레임워크가 필요한가? (Do you need new test frameworks?)* 필요하다면, 플랜에 이를 적어두고 설계에 대한 링크를 추가한다.
+* *새로운 테스트 랩 셋업이 필요한가? (Do you need a new test lab setup?)* 필요하다면, 플랜에 이를 적어두고 설계에 대한 링크를 추가한다.
+* *프로젝트가 다른 프로젝트에 서비스를 제공한다면, 다른 프로젝트 사용자에게 테스트툴을 제공하는가? (If your project offers a service to other projects, are you providing test tools to those users?)* 목(mock), 페이크(fake) 또는 신뢰할 만한 스테이지 서버를 사용자에게 제공해서, 사용자의 시스템에서 제공하는 시스템과 통합 테스트를 해볼 수 있도록 하라.
+* *엔드-투-엔드 테스팅의 경우, 테스트 인프라스트럭쳐와 테스트 대상 시스템, 그리고 다른 의존성이 있는 부분들을 어떻게 관리할 것인가? (For end-to-end testing, how will test infrastructure, systems under test, and other dependencies be managed?)* 이들을 어떻게 배포할 것인가? 어떻게 셋업/티어다운 (setup/torn-down)이 지속되도록 할 것인가? 데이터 센터 간의 마이그레이션이 필요할 때 이를 어떻게 처리할 것인가?
+* *시스템 디버그 또는 테스트 실패시 도움을 주는 새로운 툴이 필요한가? (Do you need tools to help debug system or test failures?)* 있는 툴을 사용할 수도 있고, 새로운 툴을 개발해야할 수도 있다.
+
+== 프로세스 (Process)
+* *테스트 일정에 대한 요구사항이 있는가? (Are there test schedule requirements?)* 확정 일정이 언제이며, 테스트가 진행되어야 (또는 테스트 결과가 언제 제공되어야) 하는가? 다른 것보다 먼저 완료해야하는 중요한 테스트가 있는가?
+* *빌드와 테스트는 어떻게 지속적으로 수행되는가? (How are builds and tests run continuously?)* 대부분의 작은 테스트(small test)는 https://en.wikipedia.org/wiki/Continuous_integration[CI(continuous integration)] 툴로 수행된다. 하지만 큰 테스트(large test)는 다른 접근 방법이 필요하다. 대안으로 필요할 때에 큰 테스트를 수행하도록 하는 옵션이 필요할 수도 있다.
+* *빌드 및 테스트 결과를 어떻게 보고하고 모니터링할 것인가? (How will build and test results be reported and monitored?)*
+** CI를 모니터링하는 로테이션 팀이 있는가?
+** 큰 테스트(large test)를 모니터링할 때에는 전문성을 갖고 있는 사람이 필요할 수도 있다.
+** 테스트 결과 및 다른 프로젝트 상태를 볼 수 있는 대시보드가 필요한가?
+** 누가 이메일 알림을 받을 것이고 어떻게 알림을 줄 것인가?
+** 테스트를 모니터링하는 사람이 커뮤니케이션할 때 간단히 말로 할 것인가?
+* *릴리즈시에 테스트를 어떻게 사용하는가? (How are tests used when releasing?)*
+** 릴리즈 후보에 대해 명시적으로 수행할 테스트가 있는가? 또는 릴리즈 프로세스는 지속적으로 보고되는 테스트 결과에 의존하는가?
+** 시스템 컴포넌트나 의존요소들이 개별적으로 릴리즈된다면, 각 릴리즈 별로 수행할 테스트가 있는가?
+** "릴리즈 블로커(release blocker)" 버그가 있다면 릴리즈 매니저는 실제 릴리즈를 중단시킬 것인가? 릴리즈 블로킹 영역이 무엇인지에 대한 합의가 있었는가?
+** 카나리아 릴리즈(canary releases)는 언제 수행할 것이며, 어떻게 진행 사항을 모니터하고 테스트할 것인가?
+* *외부 사용자가 어떻게 버그 리포트를 할 것인가? (How will external users report bugs?)* 피드백 링크 또는 리포트를 수집할 툴을 고려해보라.
+* *버그 트리아지(bug triage)는 어떻게 진행할 것인가? (How does bug triage work?)*  트리아지 후보에 들어갈 버그 분류나 레이블을 고려하라. 버그 리포트를 작성할 때에 팀이 반드시 넣도록 하고, 버그 리포트 템플릿을 만들 때에도 이를 알 수 있도록 하라. 하나의 버그 트래커를 사용하고 있는가? 또는 자동이나 수동 임포트 셋업이 필요한가?
+* *발견할 수 있었던 버그를 닫기 전에 새 테스트를 생성하는 규칙이 있는가? (Do you have a policy for submitting new tests before closing bugs that could have been caught?)*
+* *반영되지 않은 변경에 대해 어떻게 테스트를 사용하는가? (How are tests used for unsubmitted changes?)* 실험 빌드에 대해 누구든지 전체 테스트를 수행할 수 있다면 (이럴 수 있다면 좋다), 어떻게 이를 제공할지 고민해보라.
+* *팀 멤버가 어떻게 테스트를 생성하고 디버그할 수 있는가? (How can team members create and/or debug tests?)* 어떻게 이를 제공할지 고민해보라.
+
+== 유용성 (Utility)
+* *누가 테스트 플랜을 읽는가? (Who are the test plan readers?)* 어떤 테스트 플랜은 소수의 사람만이 읽는 반면, 어떤 것은 많은 사람이 읽는다. 최소한 모든 이해관계자(프로젝트 관리자, 테크 리드, 기획자)로 부터의 리뷰는 받아야한다. 플랜을 작성할 때에는 예상되는 독자에 대해 반드시 이해하고, 플랜을 이해할 수 있도록 배경을 충분히 설명해야한다. 그리고 플랜을 읽을 사람들이 가질만한 모든 질문에 대해 대답해본다(비록 대답을 갖고 있지 않더라도). 또한 이를 읽은 사람들이 더 많은 정보를 얻을 수 있도록, 테스트 플랜에 대해 물어볼 수 있는 연락처를 추가해보라.
+* *어떻게 실제 테스트 케이스에 대해 리뷰할 수 있는가? (How can readers review the actual test cases?)* 수동 케이스는 테스트 케이스 관리 툴에 있거나, 별도 문서 또는 테스트플랜 내에 있기도 한다. 자동화 테스트 케이스를 포함하는 디렉토리 링크를 제공하는 것도 고려해보라.
+* *요구사항, 기능과 테스트 간의 추적성이 필요한가? (Do you need traceability between requirements, features, and tests?)*
+* *제품 상태 및 품질 목표에 대한 일반적인 목표를 갖고 있는가? 어떻게 성공에 대해 측정할 것인가? (Do you have any general product health or quality goals and how will you measure success?)* 다음을 고려해보자
+** 릴리즈 흐름/리듬 (Release cadence)
+** 운영상 사용자가 발견한 버그 수 (Number of bugs caught by users in production)
+** 릴리즈 테스팅에서 발견한 버그 수 (Number of bugs caught in release testing)
+** 시간에 흐름에 따른 오픈 버그 수 (Number of open bugs over time)
+** 코드 커버리지 (Code coverage)
+** 수동 테스트 비용 (Cost of manual testing)
+** 새로운 테스트 생성의 어려움 (Difficulty of creating new tests)
